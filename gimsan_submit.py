@@ -25,7 +25,7 @@ from gibbslib.gimsan_base import GimsanJob
 from gibbslib.gimsan_exception import *
 import gibbslib.nullset_generator as nullset_generator
 
-if sys.version_info < (2,7,0):
+if sys.version_info < (2,7,0) and sys.version_info >= (3, 0):
     sys.stderr.write("You need Python 2.7 or later to run this script\n")
     exit(1)
 
@@ -39,14 +39,14 @@ def cmd_exec_func(job):
 
 class GimsanSubmitJob(GimsanJob):
     def __init__(
-            self, 
-            name, 
-            template_file, 
-            outdir, 
-            config, 
-            is_overwrite=False, 
-            skip_null=False, 
-            dryrun=False, 
+            self,
+            name,
+            template_file,
+            outdir,
+            config,
+            is_overwrite=False,
+            skip_null=False,
+            dryrun=False,
             verbose=False):
         super(GimsanSubmitJob, self).__init__(outdir, config)
 
@@ -83,7 +83,7 @@ class GimsanSubmitJob(GimsanJob):
         window_sampler_config = None
         if self.config.has_option('common', 'genome'):
             genome_file = os.path.expanduser(self.config.get('common', 'genome'))
-            mode = 'window' 
+            mode = 'window'
             window_sampler_config = dict(self.config.items('window_sampling'))
         else:
             genome_file = None
@@ -99,8 +99,8 @@ class GimsanSubmitJob(GimsanJob):
 
         nullset_generator.run_generation(
                 nullset_rand_obj,
-                mode, 
-                self.template_file, 
+                mode,
+                self.template_file,
                 genome_file,
                 self.nullset_size,
                 self.nullset_outdir,
@@ -149,21 +149,21 @@ if __name__ == '__main__':
     #defaults
     description = """
 Submit GIMSAN job
-""" 
+"""
 
 
     epilog = """
 Examples:
 
 %(prog)s --conf=conf_examples/test_window_sampling.cfg -v
-%(prog)s --conf=conf_examples/test_window_sampling.cfg -v --overwrite 
+%(prog)s --conf=conf_examples/test_window_sampling.cfg -v --overwrite
 %(prog)s --conf=conf_examples/test_window_sampling.cfg -v --overwrite --dryrun --skip-null
-""" 
+"""
 
     argp = ArgumentParserPlus(description=description, epilog=epilog)
     argp.add_argument('--conf', required=True, help="", dest="conf_file")
-    argp.add_argument('--overwrite', action="store_true", help="") 
-    argp.add_argument('--skip-null', action="store_true", help="") 
+    argp.add_argument('--overwrite', action="store_true", help="")
+    argp.add_argument('--skip-null', action="store_true", help="")
     argp.add_argument('--dryrun', action="store_true", help="")
     argp.add_argument('-v', '--verbose', action='store_true')
     args = argp.parse_args()
@@ -185,15 +185,14 @@ Examples:
     for exp in batch_exp.experiments:
         gsj = GimsanSubmitJob(
                 exp['name'],
-                exp['fasta_file'], 
+                exp['fasta_file'],
                 exp['outdir'],
-                batch_exp.config, 
-                is_overwrite = args.overwrite, 
-                skip_null = args.skip_null, 
+                batch_exp.config,
+                is_overwrite = args.overwrite,
+                skip_null = args.skip_null,
                 dryrun = args.dryrun,
                 verbose = args.verbose)
         gsj.submit_job()
     batch_exp.flag_success()
 
     benchmark.print_time(sys.stderr)
-
