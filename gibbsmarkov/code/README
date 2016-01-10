@@ -1,0 +1,9 @@
+README
+
+Version 2.1.0
+081115. Modified the chooseBestSite routine to use P(Y_i > 0)
+080807. Code cleanup for GIMSAN
+080625. Output of background model frequency
+080625. Out of range sequence are counted toward char 'X'
+080408. Increased span-capacity and fixed bug where span may be larger than minimum seqlen.
+

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{ experiment_name  }}</title>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+
+  <style type="text/css">
+    body {
+      padding-top: 20px;
+      padding-bottom: 50px;
+      padding-left: 0px;
+      //text-align: center;
+    }
+    .masthead {
+      text-align: center;
+    }
+
+    .exp-head {
+      margin-bottom: 30px;
+      text-align: center;
+      //background-color: transparent;
+    }
+    .table-cfgfile{
+      //width: 800px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    .img-weblogo {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+
+    .finder-res {
+      text-align: center;
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+    .box-weblogo{
+      position: relative;
+      padding: 15px 15px 15px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      //width: 900px;
+      background-color: #fafafa;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
+      border-color: #e5e5e5 #eee #eee;
+      border-style: solid;
+      border-width: 1px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="masthead">
+    <h3 class="text-muted">GIMSAN output</h3>
+  </div>
+  <div class="exp-head">
+    <h1>{{ experiment_name }}</h1>
+  </div>
+
+  <p><a href="{{ config_filename }}" class="btn btn-primary">Configuration File &raquo;</a></p>
+
+  <table cellpadding="10" cellspacing="1" class="table table-striped table-hover table-cfgfile">
+    <tr><th width=400>Input file</th> <td>{{ fsa_filename }}</td></tr>
+    <tr><th>Size of null set</th> <td>{{ nullset_size }}</td></tr>
+    <tr><th>Occurrences per sequence</th> <td>{{ per_seq_model_comment }}</td></tr>
+    <tr><th>Process run time limit</th> <td>{{ stop_crit_comment }}</td></tr>
+    <tr><th>Convergence rate</th> <td>{{ rapid_conv }}</td></tr>
+    <tr><th>Double-strand</th> <td>{{ double_strand_comment }}</td></tr>
+    <tr><th>Order of Markov background</th> <td>{{ markov_order }}</td></tr>
+    <tr><th>Genomic file</th> <td>{{ genomic_file_comment }}</td></tr>
+  </table>
+
+  <hr>
+
+  {% for finder_res in finder_res_lst %}
+    <div class="finder-res">
+      <p><h2><b>span: {{ finder_res.width }}</b>, logo constructed from {{ len(finder_res.kmer_lst) }} k-mers</h2></p>
+      <p>{{ finder_res.pvalue_comment }}</p>
+
+      <div class="box-weblogo" style="width:{{ finder_res.logowidth + 5 }}cm;">
+        <ul id="weblogoTab" class="nav nav-tabs">
+          <li class="active"><a href="#normal-{{ finder_res.finder_id_alt }}" data-toggle="tab">Normal</a></li>
+          <li><a href="#revcompl-{{ finder_res.finder_id_alt }}" data-toggle="tab">Reverse Complement</a></li>
+        </ul>
+        <div id="weblogoTabContent" class="tab-content">
+          <div class="tab-pane fade in active" id="normal-{{ finder_res.finder_id_alt }}">
+            <IMG height="200" alt="WebLogo" src="images/{{ finder_res.weblogo_basename }}" />
+          </div>
+          <div class="tab-pane fade" id="revcompl-{{ finder_res.finder_id_alt }}">
+            <IMG height="200" alt="WebLogo" src="images/{{ finder_res.weblogo_revcompl_basename }}" />
+          </div>
+        </div>
+      </div> <!-- /box-weblogo -->
+
+      <p>
+        <a class="btn {{ finder_res.coldep_btn_style }}" href="{{ finder_res.coldep_outfile }}">Column pairs with statistically significant dependency ({{ finder_res.coldep_num_pairs }} pairs)</a>
+      </p>
+      <a href="{{ finder_res.finder_id }}/motif-00000.stderr" class="btn btn-primary">Raw Output &raquo;</a>
+      <a href="{{ finder_res.finder_id }}/motif-00000.stdout" class="btn btn-primary">JSON &raquo;</a>
+    </div>
+    <hr>
+  {% end %}
+</div> <!-- /container -->
+
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

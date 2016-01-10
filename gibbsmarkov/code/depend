@@ -1,0 +1,44 @@
+dataset.o: dataset.c dataset.h stdinc.h symbols.h
+em_alg.o: em_alg.c em_alg.h profile.h stdinc.h dataset.h symbols.h \
+  gibbs_util.h random.h mt19937ar.h markov_score.h markov.h transprob.h \
+  zoops.h
+entsamp.o: entsamp.c entsamp.h gibbs_util.h stdinc.h profile.h dataset.h \
+  symbols.h random.h mt19937ar.h markov_score.h markov.h transprob.h \
+  zoops.h psprior.hpp
+entsamp_ilr.o: entsamp_ilr.c entsamp_ilr.h entsamp.h gibbs_util.h \
+  stdinc.h profile.h dataset.h symbols.h random.h mt19937ar.h \
+  markov_score.h markov.h transprob.h zoops.h em_alg.h
+gibbs_util.o: gibbs_util.c gibbs_util.h stdinc.h profile.h dataset.h \
+  symbols.h random.h mt19937ar.h markov_score.h markov.h transprob.h \
+  zoops.h
+heap.o: heap.c heap.h gibbs_util.h stdinc.h profile.h dataset.h symbols.h \
+  random.h mt19937ar.h markov_score.h markov.h transprob.h zoops.h
+infnan.o: infnan.c
+lgamma.o: lgamma.c
+main_entsamp_ilr.o: main_entsamp_ilr.c entsamp_ilr.h entsamp.h \
+  gibbs_util.h stdinc.h profile.h dataset.h symbols.h random.h \
+  mt19937ar.h markov_score.h markov.h transprob.h zoops.h em_alg.h \
+  print_results.h print_json.h
+main_rand.o: main_rand.c random.h mt19937ar.h
+markov.o: markov.c markov.h stdinc.h dataset.h symbols.h transprob.h
+markov_score.o: markov_score.c markov_score.h markov.h stdinc.h dataset.h \
+  symbols.h transprob.h zoops.h
+mt19937ar.o: mt19937ar.c mt19937ar.h
+multi_motifs.o: multi_motifs.c multi_motifs.h stdinc.h profile.h
+multi_motifs_perm.o: multi_motifs_perm.c multi_motifs_perm.h stdinc.h \
+  profile.h gibbs_util.h dataset.h symbols.h random.h mt19937ar.h \
+  markov_score.h markov.h transprob.h zoops.h
+print_json.o: print_json.c print_json.h gibbs_util.h stdinc.h profile.h \
+  dataset.h symbols.h random.h mt19937ar.h markov_score.h markov.h \
+  transprob.h zoops.h
+print_results.o: print_results.c print_results.h gibbs_util.h stdinc.h \
+  profile.h dataset.h symbols.h random.h mt19937ar.h markov_score.h \
+  markov.h transprob.h zoops.h
+profile.o: profile.c profile.h stdinc.h dataset.h symbols.h
+random.o: random.c
+symbols.o: symbols.c symbols.h stdinc.h
+transprob.o: transprob.c transprob.h stdinc.h
+wndbgm.o: wndbgm.c wndbgm.h transprob.h stdinc.h symbols.h
+zoops.o: zoops.c zoops.h stdinc.h
+psprior.o: psprior.cpp psprior.hpp stdinc.h markov.h dataset.h symbols.h \
+  transprob.h
