@@ -42,7 +42,7 @@ class FinderResult():
         self.outdir = outdir #per-template
 
         self.load_template_json()
-        self.pval_r_path = os.path.join(gimsan_home, 'misc', "conf_pval_only.R") 
+        self.pval_r_path = os.path.join(gimsan_home, 'misc', "conf_pval_only.R")
 
         #results
         self.pvalue_comment = None
@@ -91,10 +91,11 @@ class FinderResult():
         rout_filename = self.get_rout_filename()
         with open(rout_filename, 'rb') as fh:
             for ln in fh:
+                ln = unicode(ln, 'utf-8')
                 if 'MLE of the p-value' in ln:
                     self.pvalue_comment = ln.strip()
                     break
-        
+
         if not self.pvalue_comment:
             raise ParsingMotifResultError('Cannot find P-value comment: %s' % rout_filename)
 
@@ -117,7 +118,7 @@ class FinderResult():
     def get_rscript_text(self, template_score, null_scores_path):
         params = {
                 'pval_r_path' : self.pval_r_path,
-                'null_scores_path' : null_scores_path, 
+                'null_scores_path' : null_scores_path,
                 'template_score' : template_score,
                 }
 
@@ -183,11 +184,11 @@ class GimsanResultManager(GimsanJob):
         self.column_dependency_exec = os.path.join(self.gimsan_home, 'column_dependency_app/column_dependency.out')
         if not os.path.isfile(self.column_dependency_exec):
             raise Exception('Column-Dependency executable missing: %s' % self.column_dependency_exec)
- 
+
     def check_result_path(self):
         if not os.path.isdir(self.outdir):
             raise MissingDirError('Missing output directory: %s' % self.outdir)
- 
+
         if not os.path.isdir(self.statsig_dir):
             os.mkdir(self.statsig_dir)
         elif not self.is_overwrite:
@@ -212,8 +213,8 @@ class GimsanResultManager(GimsanJob):
 
 
     def generate_finder_result_list(self):
-        finder_meta_lst = self.get_all_finder_meta() 
-        
+        finder_meta_lst = self.get_all_finder_meta()
+
         finder_res_lst = []
         for finder_meta in finder_meta_lst:
             finder_res_lst.append(FinderResult(finder_meta, self.nullset_size, self.statsig_dir, self.outdir, self.gimsan_home))
@@ -221,14 +222,14 @@ class GimsanResultManager(GimsanJob):
         rscript_jobs = []
         for finder_res in finder_res_lst:
             rscript_filename = finder_res.extract_and_write_scores()
-            cmd = "%s -f %s &>%s" % (self.r_path, rscript_filename, finder_res.get_rout_filename()) 
+            cmd = "%s -f %s &>%s" % (self.r_path, rscript_filename, finder_res.get_rout_filename())
             job = {
                     'cmd' : cmd,
                     'job_id' : rscript_filename,
                     }
             rscript_jobs.append(job)
 
-        #run R in parallel 
+        #run R in parallel
         if self.dryrun:
             for job in rscript_jobs:
                 self.logger.info(job['cmd'])
@@ -273,10 +274,10 @@ class GimsanResultManager(GimsanJob):
             stderr_fn = coldep_fileroot + ".stderr"
             finder_res.coldep_outfile = os.path.join('coldep', stdout_fn)
             cmd = "%s -fsa %s %s 1>%s 2>%s" % (
-                    self.column_dependency_exec, 
-                    finder_res.kmer_filename, 
+                    self.column_dependency_exec,
+                    finder_res.kmer_filename,
                     randseed_param,
-                    os.path.join(coldep_dir, stdout_fn), 
+                    os.path.join(coldep_dir, stdout_fn),
                     os.path.join(coldep_dir, stderr_fn))
             job = {
                     'cmd' : cmd,
@@ -284,7 +285,7 @@ class GimsanResultManager(GimsanJob):
                     }
             job_lst.append(job)
 
-        #run R in parallel 
+        #run R in parallel
         if self.dryrun:
             for job in job_lst:
                 self.logger.info(job['cmd'])
@@ -298,7 +299,7 @@ class GimsanResultManager(GimsanJob):
             with open(full_path, 'rb') as fh:
                 for ln in fh:
                     m = re.search(r'for statistically significant pairs \((\d+) pairs\)', ln)
-                    if m: 
+                    if m:
                         finder_res.coldep_num_pairs = int(m.group(1))
                         break
 
@@ -326,7 +327,7 @@ class GimsanResultManager(GimsanJob):
                 experiment_name = self.name,
                 config_filename = os.path.join('../meta', os.path.basename(self.conf_file)),
                 fsa_filename = os.path.basename(self.template_file),
-                nullset_size = self.nullset_size, 
+                nullset_size = self.nullset_size,
                 per_seq_model_comment = gm_finder0.get_per_seq_model(),
                 stop_crit_comment = gm_finder0.get_stop_crit(),
                 rapid_conv = gm_finder0.get_rapid_conv(),
@@ -364,17 +365,17 @@ if __name__ == '__main__':
     #defaults
     description = """
 Generate GIMSAN result
-""" 
+"""
 
     epilog = """
 Examples:
 
 %(prog)s --dir=testout -v
-""" 
+"""
 
     argp = ArgumentParserPlus(description=description, epilog=epilog)
     argp.add_argument('--dir', required=True, help="main output directory used with gimsan_submit.py")
-    argp.add_argument('--overwrite', action="store_true", help="") 
+    argp.add_argument('--overwrite', action="store_true", help="")
     argp.add_argument('--dryrun', action="store_true", help="")
     argp.add_argument('-v', '--verbose', action='store_true')
     args = argp.parse_args()
@@ -394,14 +395,13 @@ Examples:
     for exp in batch_exp.experiments:
         gr_manager = GimsanResultManager(
                 exp['name'],
-                exp['fasta_file'], 
+                exp['fasta_file'],
                 exp['outdir'],
-                batch_exp.config, 
+                batch_exp.config,
                 batch_exp.conf_file,
-                is_overwrite = args.overwrite, 
+                is_overwrite = args.overwrite,
                 dryrun = args.dryrun,
                 verbose = args.verbose)
         gr_manager.generate_html()
 
     benchmark.print_time(sys.stderr)
-
