@@ -12,7 +12,7 @@ Installation
 
 2. Compile GibbsMarkov and ColumnDependency:
 
-    ./compile_clean.sh
+        ./compile_clean.sh
 
 Usage Example
 ---
@@ -23,11 +23,11 @@ Usage Example
 
 2. Submit GIMSAN job using window-sampling:
 
-    ./gimsan_submit.py --conf=conf_examples/test_window_sampling.cfg -v
+         ./gimsan_submit.py --conf=conf_examples/test_window_sampling.cfg -v
 
 3. Generate results and HTML output for GIMSAN job. If parameter `main_output_dir=testout/`
    is set in configuration file, then run:
 
-    ./gimsan_result.py --dir=testout
+         ./gimsan_result.py --dir=testout
 
 4. Open HTML file `testout/ABF1_YPD_mod/output.html`
