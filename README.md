@@ -8,7 +8,7 @@ Installation
 
 1. Install required Python libraries:
 
-    sudo pip install -r pip_requirements.txt
+        sudo pip install -r pip_requirements.txt
 
 2. Compile GibbsMarkov and ColumnDependency:
 
